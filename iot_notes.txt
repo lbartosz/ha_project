@@ -42,3 +42,54 @@ When working on Home Assistant, you can easily restart the system and then watch
 
 $ sudo systemctl restart home-assistant@[your user] && sudo journalctl -f -u home-assistant@[your user]
 
+---------------------------------------------------------------
+--- Install and configure Mosquitto MQTT broker
+
+Here is the how to:
+https://swabbster.wordpress.com/2017/06/19/home-assistant-and-mqtt/
+
+Install using apt:
+sudo apt-get install mosquitto mosquitto-clients
+
+Edit config file (check with which the broker is already running) so that it looks like this:
+listener 1883
+persistence true
+persistence_location /var/lib/mosquitto/
+persistence_file mosquitto.db
+log_dest syslog
+log_dest stdout
+log_dest topic
+log_type error
+log_type warning
+log_type notice
+log_type information
+connection_messages true
+log_timestamp true
+allow_anonymous false
+password_file /etc/mosquitto/passwd
+pid_file /var/run/mosquitto.pid
+log_dest file /var/log/mosquitto/mosquitto.log
+include_dir /etc/mosquitto/conf.d
+
+Create passwd and first user:
+sudo mosquitto_passwd -c /etc/mosquitto/passwd username
+(next users can be created without -c argument)
+
+Once the config is ready restart mosquitto service:
+sudo systemctl restart mosquitto.service
+
+Check the logs if every thing loaded ok.
+(/var/log/mosquitto/mosquitto.log)
+
+Test the brooker by subscribing and publishing messages:
+mosquitto_sub -t test_mqtt -u username -P password -h 172.16.1.13 -p 1883
+mosquitto_pub -d -t test_mqtt -m "Test Message" -h 172.16.1.13 -p 1883 -u username -P password
+
+Now configure HA to use mosquitto by edidting yaml file:
+mqtt:
+broker: 172.16.X.Y
+port: 1883
+client_id: home-assistant-1
+user: ha
+passwd: hapassword
+
