@@ -93,3 +93,18 @@ client_id: home-assistant-1
 user: ha
 passwd: hapassword
 
+---------------------------------------------------------------
+--- Install and configure Postgresql for history component
+Get Postgresql:
+sudo apt install postgresql-9.4 postgresql-server-dev-9.4
+
+Create the hass user in Postgres
+sudo -u postgres createuser hass
+
+Create the hass database owned by the hass user:
+sudo -u postgres createdb -O hass hass
+
+(the one from ha venv!) pip3 install psycopg2
+
+recorder:
+  db_url: postgresql://@/homeassistant
