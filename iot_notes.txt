@@ -90,8 +90,8 @@ mqtt:
 broker: 172.16.X.Y
 port: 1883
 client_id: home-assistant-1
-user: ha
-passwd: hapassword
+username: xxx
+password: xxx
 
 ---------------------------------------------------------------
 --- Install and configure Postgresql for history component
