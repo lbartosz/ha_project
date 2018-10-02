@@ -1,0 +1,7 @@
+*
+**/*secrets.h
+!**/.gitignore
+!*.sln
+!workspace/
+!**/*.ino
+!**/*.vcxproj
